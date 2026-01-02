@@ -6,7 +6,7 @@ body{
     margin: 0;
 }
 .minha-div{
-    width: 300px;
+    width:auto;
     background-color: lightblue;
     text-align: center;
     padding: 20px;

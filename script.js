@@ -28,7 +28,6 @@ function exibirTexto() {
 
     btnApagar.addEventListener("click", () => {
         tarefaDiv.remove();
-        console.log("Tarefa apagada")
     });
 
     tarefaDiv.appendChild(checkbox);
