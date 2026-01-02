@@ -1,0 +1,62 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.minha-div{
+    width: 300px;
+    background-color: lightblue;
+    text-align: center;
+    padding: 20px;
+
+}
+.container-input{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+.container-input input[type="text"]{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-flow: 1;
+}
+.container-input botton{
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.container-input button:hover{
+    background-color: #0056b3;
+}
+.titulo-tarefa{
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}.tarefa-item{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.riscado{
+    text-decoration: line-through;
+    color: gray;
+}.btn-apagar{
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-apagar:hover{
+    color: red;
+}
