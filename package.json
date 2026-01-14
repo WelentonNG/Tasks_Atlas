@@ -1,0 +1,23 @@
+{
+  "name": "servidor-node",
+  "version": "1.0.0",
+  "main": "server_node/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server_node/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WelentonNG/Site_de_Tarefas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WelentonNG/Site_de_Tarefas/issues"
+  },
+  "homepage": "https://github.com/WelentonNG/Site_de_Tarefas#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
