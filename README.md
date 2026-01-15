@@ -1,154 +1,152 @@
-# Site de Tarefas — Produtividade Simplificada
+# Site de Tarefas — README
 
-Bem-vindo ao Site de Tarefas: uma aplicação leve, acessível e elegante para organizar seu dia, gerenciar projetos e colaborar com a equipe.
+Uma aplicação simples para organizar tarefas, listas e colaborar em equipe. Este repositório contém a versão PHP/JS hospedada localmente (ex.: XAMPP) com suporte a uploads, histórico e notificações por e‑mail via fila.
 
----
+## Sumário
 
-## ✨ Visão Geral
-
-O Site de Tarefas oferece uma interface limpa para gerenciar tarefas individuais e listas de tarefas (to‑do lists). Ele foi pensado para ser rápido, responsivo e fácil de usar — tanto em desktop quanto em dispositivos móveis.
-
-Público‑alvo:
-- Profissionais que precisam gerenciar atividades diárias.
-- Equipes pequenas que buscam uma ferramenta de acompanhamento simples.
-- Pessoas que querem aumentar produtividade pessoal com foco em simplicidade.
-
----
-
-## Principais Recursos
-
-- Criação rápida de tarefas com título, descrição e data de vencimento.
-- Listas e projetos para organizar tarefas por contexto.
-- Prioridade, etiquetas (tags) e comentários em cada tarefa.
-- Filtragem e busca dinâmica (por etiquetas, prioridade e data).
-- Lembretes por e‑mail (opcional) e notificações na interface.
-- Modo escuro e acessibilidade (WCAG friendly).
-- Exportar/importar listas em CSV/JSON.
+- Visão geral
+- Recursos principais
+- Tecnologias
+- Requisitos
+- Instalação rápida
+- Estrutura importante do projeto
+- Execução (local)
+- E‑mail em fila (worker)
+- Testes e verificação rápida
+- Contribuindo
+- Roadmap / Em desenvolvimento
+- Licença e contato
 
 ---
 
-## Demonstração (exemplo)
+## Visão geral
 
-> Adicione uma nova tarefa: "Enviar relatório semanal"
->
-> - Prioridade: Alta
-> - Tags: `relatório`, `financeiro`
-> - Vencimento: amanhã 17:00
+Este projeto é um gerenciador de tarefas leve, pensado para uso interno em equipes pequenas. Ele inclui UI para criar/editar tarefas, upload de anexos, histórico, lixeira e um sistema simples de notificações por e‑mail que usa uma fila de JSON processada por um worker PHP.
 
-A tarefa aparecerá na sua lista com destaque de prioridade e poderá ser marcada como concluída com um clique.
+## Recursos principais
 
----
+- CRUD de tarefas e listas
+- Uploads de anexos e versionamento básico
+- Lixeira com remoção agendada
+- Notificações por e‑mail via fila (arquivos JSON em `email/queue`)
+- Painel de administração simples e controle de permissões (base)
+- Interface responsiva com suporte básico a acessibilidade
 
-## Como Começar (para desenvolvedores)
+## Tecnologias
 
-Requisitos mínimos:
-- PHP 7.4+
+- PHP 7.4+ (desenvolvimento com XAMPP/Apache)
 - MySQL / MariaDB
-- Composer (para dependências)
-- Servidor web (Apache / Nginx)
+- Composer (dependências PHP: PHPMailer, dompdf etc.)
+- Vanilla JavaScript, HTML, CSS
 
-Instalação (exemplo rápido):
+## Requisitos
 
-```bash
-# clone
-git clone <repo-url>
-cd site-de-tarefas
+- PHP 7.4 ou superior
+- MySQL / MariaDB
+- Composer
+- Servidor web (XAMPP, WAMP, Apache, Nginx)
+- Permissões de escrita para pastas: `uploads/`, `temp/`, `trash/`, `email/queue/`
 
-# instalar dependências PHP
+## Instalação rápida (local — XAMPP)
+
+1. Clone o repositório
+
+```powershell
+git clone https://github.com/WelentonNG/Site_de_Tarefas.git
+cd Site_de_Tarefas
+```
+
+2. Instale dependências PHP
+
+```powershell
 composer install
-
-# configurar .env / conexões
-cp .env.example .env
-# ajustar credenciais do banco
-
-# criar banco de dados e executar migrations (se aplicável)
-php bin/console doctrine:migrations:migrate
-
-# rodar servidor local (opcional)
-php -S localhost:8000 -t public
 ```
 
-Endpoints úteis (exemplo REST):
+3. Configure o banco de dados
 
-- GET /api/tasks — listar tarefas
-- POST /api/tasks — criar tarefa (body: title, description, due_date, tags)
-- PUT /api/tasks/:id — atualizar tarefa
-- DELETE /api/tasks/:id — remover tarefa
+- Crie um banco no seu MySQL (ex.: `site_de_tarefas`).
+- Importe um dump se houver (procure por `sgd.sql` ou outro arquivo SQL no repositório).
+- Atualize as credenciais em `conexao.php` (ou no arquivo de configuração que o projeto usar).
 
-Exemplo curl para criar uma tarefa:
+4. Ajuste permissões (Windows: garanta que o Apache/PHP possa gravar nas pastas):
 
-```bash
-curl -X POST "http://localhost:8000/api/tasks" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Enviar relatório","due_date":"2026-01-16T17:00:00"}'
+- `uploads/`, `temp/`, `trash/`, `email/queue/`
+
+5. Abra no navegador
+
+- Aponte seu XAMPP/Apache para a pasta do projeto ou use `http://localhost/<pasta>` conforme sua configuração.
+
+## Estrutura importante
+
+- `api.php` — rota/API principal e funções backend.
+- `conexao.php` — conexão com o banco e constantes de diretório (UPLOAD_DIR, TEMP_DIR, TRASH_DIR).
+- `main.js`, `lixeira.js` — lógica frontend.
+- `send_email_worker.php` — worker que processa arquivos JSON em `email/queue/` e envia e‑mails via PHPMailer.
+- `uploads/`, `temp/`, `trash/` — armazenamento de arquivos.
+- `email/queue/` — fila de e‑mails (JSONs). Certifique‑se de que existe e é gravável.
+
+## Execução do worker de e‑mail
+
+O projeto enfileira notificações como arquivos JSON em `email/queue/`. Para enviar efetivamente os e‑mails, execute o worker em background (ou via agendador):
+
+```powershell
+php send_email_worker.php "c:\full\path\to\email\queue\<arquivo>.json"
 ```
 
----
+Em ambientes Unix você pode usar um cron job; no Windows, use o Agendador de Tarefas ou um serviço que monitore a pasta.
 
-## Guia de Uso (UX)
+Observação: o worker normalmente é invocado pelo próprio `api.php` quando um e‑mail é criado, mas em servidores restritos pode ser preferível executar o worker via scheduler.
 
-- Barra lateral com filtros rápidos (Hoje, Próxima Semana, Atrasadas, Concluídas).
-- Arrastar e soltar para reordenar tarefas dentro da lista.
-- Teclas rápidas: `n` (nova tarefa), `f` (buscar), `t` (adicionar tag rápida).
-- Clique na tarefa para abrir painel lateral com detalhes, comentários e histórico.
+## Testes e verificação rápida
 
----
+1. Verifique se a aplicação carrega no navegador.
+2. Crie uma tarefa com anexo e confirme que o arquivo aparece em `temp/` ou `uploads/` conforme o fluxo.
+3. Simule uma notificação e confirme que um JSON é gravado em `email/queue/`.
+4. Execute o `send_email_worker.php` passando o JSON para confirmar o envio (logs e arquivo de status serão atualizados).
 
-## Acessibilidade e Internacionalização
+## Boas práticas e observações
 
-- Suporte a contraste alto e navegação por teclado.
-- Textos e datas localizáveis (PT‑BR por padrão).
-- Estruturas ARIA aplicadas em modais e controles dinâmicos.
-
----
-
-## Segurança
-
-- Autenticação por sessão ou JWT (configurável).
-- Proteção CSRF em formulários e endpoints que alteram estado.
-- Uploads de anexos verificados por tipo e tamanho.
-
----
-
-## Performance & Escalabilidade
-
-- Lista virtualizada para grandes quantidades de tarefas.
-- Cache em camada (Redis/Filesystem) para filtros frequentes.
-- API stateless preparada para deploy em múltiplas instâncias.
-
----
-
-## Roadmap (ideias futuras)
-
-- Integração com calendários (Google Calendar, Outlook).
-- Workflows automáticos (regras: ao concluir X, criar Y).
-- Suporte offline (PWA) e sincronização incremental.
-- Permissões avançadas por equipe e papéis (owner, editor, viewer).
-
----
+- Mantenha arquivos de configuração (credenciais) fora do repositório; prefira um `.env` ou um arquivo local não versionado.
+- Verifique permissões de escrita nas pastas de upload/queue.
+- O projeto inclui um handler para erros fatais (`shutdown`) que tenta retornar JSON útil para o frontend — útil para depuração durante desenvolvimento.
 
 ## Contribuindo
 
-Contribuições são bem‑vindas! Siga estas etapas:
-1. Fork do repositório
-2. Crie uma branch com a feature/fix: `feature/nome-da-feature`
-3. Abra um Pull Request descrevendo as mudanças
+1. Fork
+2. Crie uma branch: `feature/nome-da-feature` ou `fix/descricao`
+3. Abra um PR descrevendo as mudanças
 
-Por favor inclua testes quando possível.
+- Inclua testes simples quando possível.
+- Mantenha PRs pequenos e focados.
 
----
+## Roadmap / 🔧 Em desenvolvimento
+
+- Recursos em andamento
+  - Integração com calendários (Google/Outlook) — sincronização e mapeamento de eventos.
+  - Modo offline (PWA) com sincronização incremental.
+  - Painel de relatórios e exportação em PDF.
+
+- Próximo passo imediato
+  - Converter notificações para envio em lote para reduzir disparos redundantes de e‑mail.
+
+- Timeline (estimativa)
+  - Sprint 1 (2 semanas): API de calendários
+  - Sprint 2 (3 semanas): PWA + sincronização
+  - Sprint 3 (2 semanas): Painel de relatórios
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT — veja o arquivo `LICENSE` para mais detalhes.
-
----
+Este projeto usa a licença MIT — verifique o arquivo `LICENSE`.
 
 ## Contato
 
-Se tiver idéias, problemas ou quiser colaborar: envie um e‑mail para `contato@seudominio.com` ou abra uma issue no repositório.
-
+Abra uma issue ou envie um e‑mail para `dev@seudominio.com` para colaborar.
 
 ---
 
-Obrigado por usar o Site de Tarefas — mantenha o foco, organize o trabalho e entregue com confiança! 🚀
+Se quiser, eu também posso:
+
+- Gerar um `README.md` com conteúdo semelhante e badges prontos para o GitHub.
+- Criar instruções de configuração mais detalhadas (ex.: exemplo de `conexao.php`, comandos SQL para tabelas principais).
+
+Diga o que prefere que eu faça a seguir.
