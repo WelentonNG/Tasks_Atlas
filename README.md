@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 📋 Tasks Atlas
 
 Sistema de gerenciamento de tarefas com interface web moderna.
