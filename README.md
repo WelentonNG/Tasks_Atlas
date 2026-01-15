@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📋 Tasks Atlas
 
 Sistema de gerenciamento de tarefas com interface web moderna.
@@ -41,3 +42,6 @@ Consulte [docs/ESTRUTURA.md](docs/ESTRUTURA.md) para detalhes completos da organ
 ## 📄 Licença
 
 ISC
+=======
+
+>>>>>>> 594300e09f974dadeb3fa33d17c00b0d1e5ae9c6
